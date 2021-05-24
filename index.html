@@ -17,6 +17,10 @@
   <meta name="theme-color" content="#1DA1F2">
 </head>
 <body class="grey lighten-4">
+  <div id="token"></div>
+  <div id="msg"></div>
+  <div id="notis"></div>
+  <div id="err"></div>
 
   <!-- top nav -->
   <nav class="z-depth-0">
@@ -66,25 +70,64 @@
 
 
   <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-firestore.js"></script>
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.5.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-messaging.js"></script>
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+      https://firebase.google.com/docs/web/setup#available-libraries -->
 
-<script>
-  // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyAzoFxe2VaK7wZWXr0cR3ydGJriYUMnaZI",
-    authDomain: "andreesen-c1560.firebaseapp.com",
-    projectId: "andreesen-c1560",
-    storageBucket: "andreesen-c1560.appspot.com",
-    messagingSenderId: "995204187228",
-    appId: "1:995204187228:web:9f7816228590e7b4ae1299"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore()
-</script>
+  <script>
+
+    var MsgElem = document.getElementById('msg');
+    var TokenElem = document.getElementById('token');
+    var NotisElem = document.getElementById('notis');
+    var ErrElem = document.getElementById('err');
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyAzoFxe2VaK7wZWXr0cR3ydGJriYUMnaZI",
+      authDomain: "andreesen-c1560.firebaseapp.com",
+      projectId: "andreesen-c1560",
+      storageBucket: "andreesen-c1560.appspot.com",
+      messagingSenderId: "995204187228",
+      appId: "1:995204187228:web:9f7816228590e7b4ae1299"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore()
+    const messaging = firebase.messaging();
+    messaging
+      .requestPermission()
+      .then(function () {
+        // MsgElem.innerHTML = 'Notification permission granted.';
+        console.log('Notification permission granted.');
+
+        // get the token in the form of promise
+        return messaging.getToken();
+      })
+      .then(function (token) {
+        // TokenElem.innerHTML = 'Device token is : <br>' + token;
+      })
+      .catch(function (err) {
+        // ErrElem.innerHTML = ErrElem.innerHTML + '; ' + err;
+        console.log('Unable to get permission to notify.', err);
+      });
+
+    let enableForegroundNotification = true;
+    messaging.onMessage(function (payload) {
+      console.log('Message received. ', payload);
+      // NotisElem.innerHTML =
+      //     NotisElem.innerHTML + JSON.stringify(payload);
+
+      if (enableForegroundNotification) {
+          let notification = payload.notification;
+          navigator.serviceWorker
+              .getRegistrations()
+              .then((registration) => {
+                  registration[0].showNotification(notification.title);
+              });
+      }
+    });
+  </script>
   <script src="/js/app.js"></script>
   <script src="/js/db.js"></script>
   <script src="/js/ui.js"></script>
