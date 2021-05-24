@@ -12,9 +12,9 @@ db.enablePersistence()
     })
 
 db.collection('posts').onSnapshot((snapshot) => {
-    console.log(snapshot.docChanges())
+    // console.log(snapshot.docChanges())
     snapshot.docChanges().forEach(change => {
-        console.log(change.type ,change.doc.data())
+        // console.log(change.type ,change.doc.data())
 
         if (change.type === 'added') {
             // Add new post

@@ -1,4 +1,4 @@
-const posts = document.querySelector('.recipes')
+const posts = document.querySelector(".posts");
 const side_menu = document.getElementById('side-menu')
 
 
@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     side_menu.innerHTML += logged_menu
     const logout_btn = document.getElementById('logout-btn')
     logout_btn.addEventListener('click', () => {
-      console.log('penee')
       localStorage.clear()
       side_menu.innerHTML = not_logged_menu
     })
@@ -57,17 +56,15 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Render Post data
 const renderPost = (data, id) => {
   const html = `
-  <div class="card-panel recipe white row" data-id="${id}">
+  <div class="card-panel posts white row" data-id="${id}">
       <img src="https://moonvillageassociation.org/wp-content/uploads/2018/06/default-profile-picture1.jpg" alt="recipe thumb">
-      <div class="recipe-details">
-        <div class="recipe-title">${data.user}</div>
-        <div class="recipe-ingredients">${data.caption}</div>
+      <div class="posts-details">
+        <div class="posts-title">${data.user}</div>
+        <div class="posts-ingredients">${data.caption}</div>
       </div>
-      <div class="recipe-delete">
-        <i class="material-icons" data-id="${id}">delete_outline</i>
-      </div>
+      
     </div>
-  `
+  `;
   posts.innerHTML += html
 } 
 
